@@ -1,0 +1,88 @@
+<html>
+<head>
+  <script src="https://cdn.firebase.com/js/client/2.0.4/firebase.js"></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+  <link rel="stylesheet" type="text/css" href="/resources/tutorial/css/example.css">
+</head>
+<body>
+
+<!-- CHAT MARKUP -->
+<div class="example-chat l-demo-container">
+  <header>Chatterbox</header>
+
+  <div class='example-chat-toolbar'>
+    <label for="nameInput">Username:</label>
+    <input type='text' id='nameInput' placeholder='enter a username...'>
+  </div>
+
+  <ul id='example-messages' class="example-chat-messages"></ul>
+
+  <footer>
+    <input type='text' id='messageInput'  placeholder='Type a message...'>
+  </footer>
+</div>
+
+<!-- CHAT JAVASCRIPT -->
+<script>
+  // CREATE A REFERENCE TO FIREBASE
+  var messagesRef = new Firebase('https://chatterbox-codeday.firebaseio.com/');
+
+  // REGISTER DOM ELEMENTS
+  var messageField = $('#messageInput');
+  var nameField = $('#nameInput');
+  var messageList = $('#example-messages');
+
+
+  // Put all text values into an array
+  messagesRef.on('value', function (snapshot) {
+   
+    var data = snapshot.val();
+    var allWords = [];
+    for(int i = 0; i < data.length; i++)
+    {
+        var textval = data[i].text;
+        var splitval = textval.split(" ");
+        for(int k = 0; k < splitval.length(); k++)
+        {
+            allWords.push(splitval[k]);
+        }
+    }
+   
+  // Sort through the array to find the 5 words with the highest frequency  
+    var hash = function(arrWords) {
+        var dict = {};    
+        for(int i = 0; i < arrWords.length; i++)
+        {
+            if(arrWords[i] in dict)
+            {
+                dict.(arrWords[i]) = dict.(arrWords[i]) + 1;
+            }
+            else
+            {
+                dict.(arrWords[i]) = 1;
+            }
+        }
+            
+        return dict;
+    }
+    
+    var displayTopTrends = function(dict) {
+        var topTrends = [];
+        for(int i = 0; i < dict.length; i++)
+        {
+            var temp = dict.arrWords[i];
+            boolean isFiller = false;
+            if(temp == "an" || temp == "and" || temp == "the" || temp == "because" || temp == "no" || temp == "yes" || temp == "not")
+                isFiller = true;
+            if(dict.arrWords[i] > 5 && !isFiller)
+                topTrends.push(dict.arrWords[i]);
+        }
+        
+        
+    }
+    
+    
+  });
+</script>
+</body>
+</html>
